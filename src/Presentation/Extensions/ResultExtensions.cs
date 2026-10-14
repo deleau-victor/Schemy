@@ -1,0 +1,93 @@
+using Presentation.Abstractions;
+
+namespace Presentation.Extensions;
+
+/// <summary>
+/// Extensions for converting <see cref="Result{T}"/> to <see cref="HttpResult"/>.
+/// </summary>
+internal static class ResultExtensions
+{
+   extension<T>(Result<T> result)
+   {
+      /// <summary>
+      /// Converts a <see cref="Result{T}"/> to an appropriate <see cref="HttpResult"/>.
+      /// </summary>
+      /// <param name="result">The result to convert.</param>
+      /// <param name="transform">Optional transformation function for the value.</param>
+      /// <returns>An HTTP result representing the outcome.</returns>
+      public HttpResult ToHttpResult(Func<T, object?>? transform = null)
+      {
+         return result.Match(
+            onSuccess: value => ToSuccessResult(value, result.SuccessType, transform),
+            onFailure: ToErrorResult);
+      }
+   }
+
+   private static HttpResult ToSuccessResult<T>(T value, SuccessType successType, Func<T, object?>? transform)
+   {
+      if (typeof(T) == typeof(Unit))
+      {
+         return successType == SuccessType.Created
+            ? Results.Created()
+            : Results.NoContent();
+      }
+
+      object? responseData = transform is not null ? transform(value) : value;
+
+      return successType switch
+      {
+         SuccessType.Created => Results.Created(string.Empty, ApiResponse<object?>.From(responseData)),
+         _ => Results.Ok(ApiResponse<object?>.From(responseData))
+      };
+   }
+
+   private static HttpResult ToErrorResult(ResultError error)
+   {
+      // Structured validation errors are emitted as a Problem with a custom "errors" extension
+      // so we can carry the new ValidationFieldError[] shape (Results.ValidationProblem only
+      // supports IDictionary<string, string[]>).
+      if (error.Type == ErrorType.Validation && error.ValidationErrors is not null)
+      {
+         return Results.Problem(
+             statusCode: StatusCodes.Status400BadRequest,
+             title: "Validation Failed",
+             detail: error.Message,
+             extensions: new Dictionary<string, object?>
+             {
+                ["code"] = error.Code,
+                ["args"] = error.Args,
+                ["errors"] = error.ValidationErrors,
+             });
+      }
+
+      int statusCode = error.Type switch
+      {
+         ErrorType.Validation => StatusCodes.Status400BadRequest,
+         ErrorType.NotFound => StatusCodes.Status404NotFound,
+         ErrorType.Conflict => StatusCodes.Status409Conflict,
+         ErrorType.Unauthorized => StatusCodes.Status401Unauthorized,
+         ErrorType.Forbidden => StatusCodes.Status403Forbidden,
+         _ => StatusCodes.Status500InternalServerError
+      };
+
+      return Results.Problem(
+          statusCode: statusCode,
+          title: GetTitleForStatusCode(statusCode),
+          detail: error.Message,
+          extensions: new Dictionary<string, object?>
+          {
+             ["code"] = error.Code,
+             ["args"] = error.Args,
+          });
+   }
+
+   private static string GetTitleForStatusCode(int statusCode) => statusCode switch
+   {
+      StatusCodes.Status400BadRequest => "Bad Request",
+      StatusCodes.Status401Unauthorized => "Unauthorized",
+      StatusCodes.Status403Forbidden => "Forbidden",
+      StatusCodes.Status404NotFound => "Not Found",
+      StatusCodes.Status409Conflict => "Conflict",
+      _ => "Internal Server Error"
+   };
+}
