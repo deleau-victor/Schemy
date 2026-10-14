@@ -3,8 +3,9 @@ import { describe, expect, it } from 'vite-plus/test';
 import { App } from './App';
 
 describe('App', () => {
-  it('affiche le nom de l’application', () => {
-    render(<App />);
-    expect(screen.getByText('Schemy')).toBeTruthy();
+  it('monte le routeur, le sprite et la page d’accueil', async () => {
+    const { container } = render(<App />);
+    expect(await screen.findByRole('heading', { level: 1, name: 'Mes schémas' })).toBeTruthy();
+    expect(container.querySelector('symbol#i-home')).toBeTruthy();
   });
 });
