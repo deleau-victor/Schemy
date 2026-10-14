@@ -1,0 +1,100 @@
+using FluentValidation.Results;
+using System.Reflection;
+
+namespace Application.Abstractions.Behaviors;
+
+/// <summary>
+/// Pipeline behavior that validates commands using FluentValidation.
+/// Only applies to commands (ICommand), not queries.
+/// </summary>
+/// <typeparam name="TResponse">The type of response.</typeparam>
+public sealed class ValidationBehavior<TResponse>(IServiceProvider serviceProvider) : IPipelineBehavior<TResponse>
+{
+   private readonly IServiceProvider _serviceProvider = serviceProvider;
+
+   public async Task<TResponse> Handle(
+       object request,
+       RequestHandlerDelegate<TResponse> nextHandler,
+       CancellationToken cancellationToken)
+   {
+      // Only validate commands
+      Type requestType = request.GetType();
+      if (!IsCommand(requestType))
+      {
+         return await nextHandler();
+      }
+
+      // Get validator for this request type
+      Type validatorType = typeof(IValidator<>).MakeGenericType(requestType);
+
+      if (_serviceProvider.GetService(validatorType) is not IValidator validator)
+      {
+         return await nextHandler();
+      }
+
+      // Validate
+      var validationContext = new ValidationContext<object>(request);
+      ValidationResult validationResult = await validator.ValidateAsync(validationContext, cancellationToken);
+
+      if (validationResult.IsValid)
+      {
+         return await nextHandler();
+      }
+
+      // Convert validation errors to a structured dictionary keyed by property name.
+      // Each entry carries (code, args) so the front-end can re-render a localized message.
+      var validationErrors = validationResult.Errors
+          .GroupBy(e => e.PropertyName)
+          .ToDictionary(
+             g => g.Key,
+             g => g.Select(ToValidationFieldError).ToArray());
+
+      var resultError = new ResultError("Validation.Failed", "One or more validation errors occurred.", ErrorType.Validation)
+      {
+         ValidationErrors = validationErrors
+      };
+
+      // Return failure result
+      return CreateFailureResult(resultError);
+   }
+
+   private static ValidationFieldError ToValidationFieldError(ValidationFailure f)
+   {
+      // Validators using .WithError(ResultError) attach the ResultError to CustomState.
+      if (f.CustomState is ResultError err)
+      {
+         return new ValidationFieldError(err.Code, err.Args);
+      }
+
+      // Fallback for validators not yet migrated: keep the ErrorCode if present, no args.
+      return new ValidationFieldError(
+         f.ErrorCode ?? "Validation.Unknown",
+         Args: null);
+   }
+
+   private static bool IsCommand(Type type)
+   {
+      return type.GetInterfaces().Any(i =>
+          i.IsGenericType &&
+          (i.GetGenericTypeDefinition() == typeof(ICommand<>) ||
+           i == typeof(ICommand)));
+   }
+
+   private static TResponse CreateFailureResult(ResultError error)
+   {
+      Type responseType = typeof(TResponse);
+
+      // Check if TResponse is Result<T>
+      if (responseType.IsGenericType && responseType.GetGenericTypeDefinition() == typeof(Result<>))
+      {
+         Type innerType = responseType.GetGenericArguments()[0];
+         MethodInfo? failureMethod = typeof(Result<>)
+             .MakeGenericType(innerType)
+             .GetMethod(nameof(Result<>.Failure), [typeof(ResultError)]);
+
+         return (TResponse)failureMethod!.Invoke(null, [error])!;
+      }
+
+      throw new InvalidOperationException($"Cannot create failure result for type {responseType.Name}");
+   }
+}
