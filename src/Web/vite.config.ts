@@ -15,10 +15,8 @@ export default defineConfig({
     modules: { localsConvention: 'camelCase' },
   },
   server: {
-    host: true,
     port: Number(process.env.PORT ?? 5180),
     strictPort: true,
-    allowedHosts: ['host.containers.internal'],
     proxy: { '/api': toApi, '/openapi': toApi, '/swagger': toApi },
   },
   test: {
@@ -31,7 +29,8 @@ export default defineConfig({
     options: { typeAware: true, typeCheck: true },
   },
   fmt: {
-    ignorePatterns: ['dist/**', 'src/generated/**'],
+    // tokens.css / base.css are extracted verbatim from schemy.html (parity reference).
+    ignorePatterns: ['dist/**', 'src/generated/**', 'src/styles/tokens.css', 'src/styles/base.css'],
     singleQuote: true,
   },
   run: {
