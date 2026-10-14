@@ -19,15 +19,13 @@ internal sealed class GlobalExceptionHandler(
        Exception exception,
        CancellationToken cancellationToken)
    {
-      logger.LogError(exception, "Unhandled exception occurred: {Message}", exception.Message);
+      logger.LogError(exception, "Unhandled exception occurred");
 
-      (int statusCode, string title, string code) = exception switch
-      {
-         ArgumentException             => (StatusCodes.Status400BadRequest,         "Bad Request",           "Server.BadRequest"),
-         UnauthorizedAccessException   => (StatusCodes.Status401Unauthorized,       "Unauthorized",          "Server.Unauthorized"),
-         InvalidOperationException     => (StatusCodes.Status422UnprocessableEntity,"Unprocessable Entity",  "Server.UnprocessableEntity"),
-         _                             => (StatusCodes.Status500InternalServerError,"Internal Server Error", "Server.InternalError"),
-      };
+      // Every unhandled exception is a server fault: exception types (EF Core, Npgsql, the dispatcher...)
+      // say nothing about whether the client is at fault, so never map them to 4xx.
+      const int statusCode = StatusCodes.Status500InternalServerError;
+      const string title = "Internal Server Error";
+      const string code = "Server.InternalError";
 
       string detail = _isDevelopment
           ? exception.Message

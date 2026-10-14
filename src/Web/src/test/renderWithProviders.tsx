@@ -1,9 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render } from '@testing-library/react';
 import { RouterProvider, createMemoryRouter } from 'react-router';
+import { client } from '@/generated/client.gen';
 import { routes } from '@/routes';
 
 export function renderRoute(path: string) {
+  client.setConfig({
+    fetch: (async () => Promise.reject(new TypeError('offline'))) as unknown as typeof fetch,
+  });
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const router = createMemoryRouter(routes, { initialEntries: [path] });
   return render(

@@ -42,4 +42,22 @@ public class GlobalExceptionHandlerTests
 
         body.GetProperty("detail").GetString().ShouldBe("détail utile");
     }
+
+    [Theory]
+    [InlineData(typeof(InvalidOperationException))]
+    [InlineData(typeof(ArgumentException))]
+    [InlineData(typeof(UnauthorizedAccessException))]
+    [InlineData(typeof(InvalidCastException))]
+    public async Task Production_ShouldMapEveryUnhandledException_ToGeneric500(Type exceptionType)
+    {
+        var exception = (Exception)Activator.CreateInstance(exceptionType, "SELECT * FROM secret_table")!;
+
+        (int status, JsonElement body) = await HandleAsync("Production", exception);
+
+        status.ShouldBe(StatusCodes.Status500InternalServerError);
+        body.GetProperty("code").GetString().ShouldBe("Server.InternalError");
+        body.GetProperty("args").GetArrayLength().ShouldBe(0);
+        body.GetProperty("traceId").GetString().ShouldNotBeNullOrEmpty();
+        body.GetProperty("detail").GetString()!.ShouldNotContain("secret_table");
+    }
 }

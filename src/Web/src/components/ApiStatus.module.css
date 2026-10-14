@@ -1,0 +1,8 @@
+.status {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.offline {
+  color: var(--danger);
+}
