@@ -1,0 +1,4 @@
+# Vite+ manual install: dependencies importing `vite`/`vitest` must resolve to the Vite+ toolchain.
+overrides:
+  vite: npm:@voidzero-dev/vite-plus-core@1.2.0
+  vitest: 5.0.4
