@@ -22,6 +22,9 @@ public class LayerDependencyTests
     [InlineData("Microsoft.AspNetCore")]
     [InlineData("Microsoft.Extensions")]
     [InlineData("FluentValidation")]
+    [InlineData("Npgsql")]
+    [InlineData("Dapper")]
+    [InlineData("Minio")]
     public void Domain_ShouldNotDependOn_Frameworks(string framework)
     {
         TestResult result = Types.InAssembly(Assemblies.Domain).ShouldNot().HaveDependencyOn(framework).GetResult();

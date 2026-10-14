@@ -14,6 +14,8 @@ internal static partial class PresentationDependencyInjection
                 options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
                 options.SerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+                // Web defaults allow reading numbers from strings, which makes OpenAPI emit integer|string unions.
+                options.SerializerOptions.NumberHandling = JsonNumberHandling.Strict;
             });
 
             return services;

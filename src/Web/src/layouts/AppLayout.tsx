@@ -1,4 +1,5 @@
 import { Outlet } from 'react-router';
+import { ApiStatus } from '@/components/ApiStatus';
 import { ThemeToggle } from '@/components/ui/ThemeToggle';
 import styles from './AppLayout.module.css';
 
@@ -7,6 +8,7 @@ export function AppLayout() {
     <div className={styles.shell}>
       <header className={styles.header}>
         <span className={styles.brand}>Schemy</span>
+        <ApiStatus />
         <ThemeToggle />
       </header>
       <main className={styles.main}>

@@ -30,3 +30,4 @@ src/Web/package-lock.json
 
 # Secrets locaux
 *.env
+.env*.local
