@@ -1,0 +1,10 @@
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body { background: var(--bg); color: var(--ink); font-family: var(--font-body); font-size: 14px; overflow: hidden; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--code); outline-offset: 2px; }
+svg.i { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+#root { height: 100%; }
+.icon-btn { border: 0; background: transparent; border-radius: 8px; width: 34px; height: 34px; display: inline-grid; place-items: center; color: var(--muted); }
+.icon-btn:hover { background: var(--hover); color: var(--ink); }

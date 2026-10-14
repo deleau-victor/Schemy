@@ -1,0 +1,111 @@
+:root {
+  --bg: #f5f8f9;
+  --panel: #ffffff;
+  --paper: #ffffff;
+  --dot: #c9d3d8;
+  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 8.5v7M8.5 12h7' stroke='%23c9d9df' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");
+  --head: #edf3f5;
+  --ink: #1a2125;
+  --muted: #5b676d;
+  --line: #e1e8eb;
+  --hover: #eef3f5;
+  --code: #1d5a8a;
+  --code-soft: #dce8f2;
+  --sketch: #a3531a;
+  --sketch-soft: #f4e4d6;
+  --fav: #c2304a;
+  --danger: #b3261e;
+  --ok: #2f6b3a;
+  --shadow: 0 1px 2px rgba(20, 30, 35, .06), 0 6px 20px rgba(20, 30, 35, .08);
+  --hl-kw: #7a3fb0; --hl-arrow: #b0451d; --hl-text: #2f6b3a; --hl-str: #8a6a00; --hl-com: #8b979d; --hl-meta: #1d5a8a;
+  --font-display: "Bricolage Grotesque", "Avenir Next", system-ui, sans-serif;
+  --font-body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #111518; --panel: #181d21; --paper: #14191c; --dot: #2c363c; --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 8.5v7M8.5 12h7' stroke='%232d3a41' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E"); --head: #1d2429; --ink: #e2e8ea; --muted: #8e9ba2;
+    --line: #2a3338; --hover: #222a2f; --code: #72aee0; --code-soft: #1d3346; --sketch: #e39b5e; --sketch-soft: #3a2a1e;
+    --fav: #f07a90; --danger: #f2867e; --ok: #7fc28a; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+    --hl-kw: #c39bf0; --hl-arrow: #f0956a; --hl-text: #8fd19a; --hl-str: #e6c45c; --hl-com: #66737a; --hl-meta: #72aee0;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #111518; --panel: #181d21; --paper: #14191c; --dot: #2c363c; --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 8.5v7M8.5 12h7' stroke='%232d3a41' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E"); --head: #1d2429; --ink: #e2e8ea; --muted: #8e9ba2;
+  --line: #2a3338; --hover: #222a2f; --code: #72aee0; --code-soft: #1d3346; --sketch: #e39b5e; --sketch-soft: #3a2a1e;
+  --fav: #f07a90; --danger: #f2867e; --ok: #7fc28a; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  --hl-kw: #c39bf0; --hl-arrow: #f0956a; --hl-text: #8fd19a; --hl-str: #e6c45c; --hl-com: #66737a; --hl-meta: #72aee0;
+  color-scheme: dark;
+}
+
+/* In-app theme switch (Clair / Sombre) wins over the system and the host setting. */
+html:root.ui-light {
+  --bg: #f5f8f9;
+  --panel: #ffffff;
+  --paper: #ffffff;
+  --dot: #c9d3d8;
+  --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 8.5v7M8.5 12h7' stroke='%23c9d9df' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E");
+  --head: #edf3f5;
+  --ink: #1a2125;
+  --muted: #5b676d;
+  --line: #e1e8eb;
+  --hover: #eef3f5;
+  --code: #1d5a8a;
+  --code-soft: #dce8f2;
+  --sketch: #a3531a;
+  --sketch-soft: #f4e4d6;
+  --fav: #c2304a;
+  --danger: #b3261e;
+  --ok: #2f6b3a;
+  --shadow: 0 1px 2px rgba(20, 30, 35, .06), 0 6px 20px rgba(20, 30, 35, .08);
+  --hl-kw: #7a3fb0; --hl-arrow: #b0451d; --hl-text: #2f6b3a; --hl-str: #8a6a00; --hl-com: #8b979d; --hl-meta: #1d5a8a;
+  color-scheme: light;
+}
+html:root.ui-dark {
+  --bg: #111518; --panel: #181d21; --paper: #14191c; --dot: #2c363c; --pattern: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M12 8.5v7M8.5 12h7' stroke='%232d3a41' stroke-width='1.3' stroke-linecap='round'/%3E%3C/svg%3E"); --head: #1d2429; --ink: #e2e8ea; --muted: #8e9ba2;
+  --line: #2a3338; --hover: #222a2f; --code: #72aee0; --code-soft: #1d3346; --sketch: #e39b5e; --sketch-soft: #3a2a1e;
+  --fav: #f07a90; --danger: #f2867e; --ok: #7fc28a; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.35);
+  --hl-kw: #c39bf0; --hl-arrow: #f0956a; --hl-text: #8fd19a; --hl-str: #e6c45c; --hl-com: #66737a; --hl-meta: #72aee0;
+  color-scheme: dark;
+}
+/* GNOME-style window tokens (file explorer). Same five selectors as above so the in-app switch still wins. */
+:root {
+  --font-display: "Cantarell", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-body: "Cantarell", "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --win: linear-gradient(150deg, #f4eff4 0%, #eef0f6 50%, #e8eef4 100%);
+  --side: rgba(255, 255, 255, .7); --side-line: rgba(30, 30, 50, .09); --hover-a: rgba(30, 30, 50, .055);
+  --sel: rgba(53, 132, 228, .13); --sel-line: rgba(53, 132, 228, .45); --pill: rgba(30, 30, 50, .06);
+  --folder-a: #5aa6e6; --folder-b: #95cdf5; --folder-c: #72b6ec;
+  --page: #ffffff; --page-fold: #dfe3e8; --star: #e5a50a; --status-bg: rgba(255, 255, 255, .92);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --win: linear-gradient(160deg, #3b2634 0%, #282433 45%, #1b1f2c 100%);
+    --side: rgba(44, 38, 50, .55); --side-line: rgba(255, 255, 255, .1); --hover-a: rgba(255, 255, 255, .06);
+    --sel: rgba(255, 255, 255, .1); --sel-line: rgba(255, 255, 255, .32); --pill: rgba(255, 255, 255, .08);
+    --folder-a: #5ba2d8; --folder-b: #93cdf3; --folder-c: #6fb4e6;
+    --page: #4b4e56; --page-fold: #7d8089; --star: #f6d32d; --status-bg: rgba(24, 24, 30, .9);
+  }
+}
+:root[data-theme="dark"] {
+  --win: linear-gradient(160deg, #3b2634 0%, #282433 45%, #1b1f2c 100%);
+  --side: rgba(44, 38, 50, .55); --side-line: rgba(255, 255, 255, .1); --hover-a: rgba(255, 255, 255, .06);
+  --sel: rgba(255, 255, 255, .1); --sel-line: rgba(255, 255, 255, .32); --pill: rgba(255, 255, 255, .08);
+  --folder-a: #5ba2d8; --folder-b: #93cdf3; --folder-c: #6fb4e6;
+  --page: #4b4e56; --page-fold: #7d8089; --star: #f6d32d; --status-bg: rgba(24, 24, 30, .9);
+}
+html:root.ui-light {
+  --win: linear-gradient(150deg, #f4eff4 0%, #eef0f6 50%, #e8eef4 100%);
+  --side: rgba(255, 255, 255, .7); --side-line: rgba(30, 30, 50, .09); --hover-a: rgba(30, 30, 50, .055);
+  --sel: rgba(53, 132, 228, .13); --sel-line: rgba(53, 132, 228, .45); --pill: rgba(30, 30, 50, .06);
+  --folder-a: #5aa6e6; --folder-b: #95cdf5; --folder-c: #72b6ec;
+  --page: #ffffff; --page-fold: #dfe3e8; --star: #e5a50a; --status-bg: rgba(255, 255, 255, .92);
+}
+html:root.ui-dark {
+  --win: linear-gradient(160deg, #3b2634 0%, #282433 45%, #1b1f2c 100%);
+  --side: rgba(44, 38, 50, .55); --side-line: rgba(255, 255, 255, .1); --hover-a: rgba(255, 255, 255, .06);
+  --sel: rgba(255, 255, 255, .1); --sel-line: rgba(255, 255, 255, .32); --pill: rgba(255, 255, 255, .08);
+  --folder-a: #5ba2d8; --folder-b: #93cdf3; --folder-c: #6fb4e6;
+  --page: #4b4e56; --page-fold: #7d8089; --star: #f6d32d; --status-bg: rgba(24, 24, 30, .9);
+}
