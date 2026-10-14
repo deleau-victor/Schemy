@@ -1,0 +1,32 @@
+# .NET
+[Bb]in/
+[Oo]bj/
+artifacts/
+*.user
+*.suo
+*.lscache
+.vs/
+.idea/
+[Tt]est[Rr]esult*/
+*.trx
+coverage*.json
+coverage*.xml
+*.binlog
+
+# Node / Vite+
+node_modules/
+src/Web/dist/
+*.tsbuildinfo
+src/Web/package-lock.json
+
+# Éditeurs
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Superpowers (sessions de brainstorming seulement : specs et plans sont versionnés)
+.superpowers/brainstorm/
+.worktrees/
+
+# Secrets locaux
+*.env
